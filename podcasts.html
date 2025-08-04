@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Podcasts & Community - Akubrecah Entertainment</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Podcast Page Specific Styles */
+        .podcast-section {
+            padding: 6rem 0;
+            min-height: 100vh;
+        }
+        
+        .podcast-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .podcast-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .podcast-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .podcast-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .podcast-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+        
+        .podcast-meta {
+            display: flex;
+            justify-content: space-between;
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+        
+        .podcast-description {
+            color: #6b7280;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+        
+        .podcast-player {
+            width: 100%;
+            margin-top: auto;
+        }
+        
+        .podcast-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+        
+        .podcast-action-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: none;
+            border: none;
+            color: #6b7280;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            font-size: 0.875rem;
+        }
+        
+        .podcast-action-btn:hover {
+            color: #06b6d4;
+        }
+        
+        .podcast-upload-section {
+            background: #f9fafb;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .upload-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .upload-input {
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            width: 100%;
+            font-size: 1rem;
+        }
+        
+        .upload-file {
+            padding: 0.5rem;
+        }
+        
+        .upload-btn {
+            background: linear-gradient(135deg, #06b6d4, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(6, 182, 212, 0.3);
+        }
+        
+        .chat-section {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+        
+        .chat-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .chat-header i {
+            color: #06b6d4;
+            font-size: 2rem;
+        }
+        
+        .chat-header h2 {
+            font-size: 1.75rem;
+            font-weight: bold;
+            color: #111827;
+        }
+        
+        .chat-container {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .friends-list {
+            width: 250px;
+            border-right: 1px solid #e5e7eb;
+            padding-right: 1.5rem;
+        }
+        
+        .friend-item {
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: background 0.3s ease;
+        }
+        
+        .friend-item:hover, .friend-item.active {
+            background: #f3f4f6;
+        }
+        
+        .friend-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #06b6d4, #1d4ed8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .friend-name {
+            font-weight: 500;
+            color: #111827;
+        }
+        
+        .friend-status {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+        }
+        
+        .status-indicator.offline {
+            background: #9ca3af;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .messages-container {
+            height: 350px;
+            overflow-y: auto;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .message {
+            max-width: 70%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            font-size: 0.95rem;
+        }
+        
+        .message.received {
+            background: #f3f4f6;
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+        }
+        
+        .message.sent {
+            background: linear-gradient(135deg, #06b6d4, #1d4ed8);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 0;
+        }
+        
+        .message-time {
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            color: #9ca3af;
+            text-align: right;
+        }
+        
+        .message.sent .message-time {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .chat-input-container {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .chat-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+        }
+        
+        .send-btn {
+            background: linear-gradient(135deg, #06b6d4, #1d4ed8);
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            width: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(6, 182, 212, 0.3);
+        }
+        
+        .reaction-bar {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            justify-content: flex-end;
+        }
+        
+        .reaction-btn {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: #6b7280;
+            transition: all 0.3s ease;
+        }
+        
+        .reaction-btn:hover {
+            transform: scale(1.2);
+            color: #06b6d4;
+        }
+        
+        .reaction-count {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-left: 0.25rem;
+        }
+        
+        @media (max-width: 768px) {
+            .chat-container {
+                flex-direction: column;
+            }
+            
+            .friends-list {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #e5e7eb;
+                padding-right: 0;
+                padding-bottom: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .podcast-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="nav-wrapper">
+                <div class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Akubrecah Entertainment</span>
+                </div>
+                
+                <nav class="nav desktop-nav">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="services.html" class="nav-link">Services</a>
+                    <a href="testimonials.html" class="nav-link">Testimonials</a>
+                    <a href="contact.html" class="nav-link">Contact</a>
+                    <a href="podcast.html" class="nav-link active">Podcast</a>
+                </nav>
+                
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <nav class="mobile-nav">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="services.html" class="nav-link">Services</a>
+                <a href="testimonials.html" class="nav-link">Testimonials</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+                <a href="podcast.html" class="nav-link active">Podcast</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Podcast & Community Section -->
+    <section class="podcast-section">
+        <div class="container">
+            <div class="page-header">
+                <h1>Podcasts & Community</h1>
+                <p>Listen to our latest podcasts and connect with the Akubrecah community</p>
+            </div>
+
+            <!-- Podcast Upload Section -->
+            <!-- <div class="podcast-upload-section">
+                <h2 style="margin-bottom: 1.5rem;">Upload New Podcast</h2>
+                <form class="upload-form">
+                    <div>
+                        <label class="upload-label" for="podcast-title">Podcast Title</label>
+                        <input type="text" id="podcast-title" class="upload-input" placeholder="Enter podcast title">
+                    </div>
+                    
+                    <div>
+                        <label class="upload-label" for="podcast-description">Description</label>
+                        <textarea id="podcast-description" class="upload-input" rows="3" placeholder="Describe your podcast episode"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="upload-label" for="podcast-image">Cover Image</label>
+                        <input type="file" id="podcast-image" class="upload-input upload-file" accept="image/*">
+                    </div>
+                    
+                    <div>
+                        <label class="upload-label" for="podcast-audio">Audio File</label>
+                        <input type="file" id="podcast-audio" class="upload-input upload-file" accept="audio/*">
+                    </div>
+                    
+                    <button type="submit" class="upload-btn">
+                        <i class="fas fa-upload"></i> Upload Podcast
+                    </button>
+                </form>
+            </div>
+
+            <!-- Podcast Listings -->
+            <h2 style="margin-bottom: 1.5rem;">Latest Episodes</h2>
+            <div class="podcast-grid">
+                <!-- Podcast 1
+                <div class="podcast-card">
+                    <img src="https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Digital Security" class="podcast-image">
+                    <h3 class="podcast-title">Digital Security in Kenya</h3>
+                    <div class="podcast-meta">
+                        <span><i class="fas fa-calendar"></i> June 12, 2025</span>
+                        <span><i class="fas fa-clock"></i> 42 min</span>
+                    </div>
+                    <p class="podcast-description">Exploring the latest cybersecurity threats facing Kenyan businesses and individuals, with expert insights on how to protect your digital assets.</p>
+                    <audio>
+                        <source src="/src/B13-Episode-1 (copy 1).mp3" type="audio/mp3">
+                    </audio>
+                    <div class="podcast-actions">
+                        <button class="podcast-action-btn">
+                            <i class="fas fa-heart"></i> 24
+                        </button>
+                        <button class="podcast-action-btn">
+                            <i class="fas fa-comment"></i> 8
+                        </button>
+                        <button class="podcast-action-btn">
+                            <i class="fas fa-share"></i>
+                        </button>
+                    </div>
+                </div> -->
+                
+                <!-- Podcast 2 -->
+                <div class="podcast-card">
+                    <img src="https://images.pexels.com/photos/270288/pexels-photo-270288.jpeg" alt="Podcast B13-Episode-1" class="podcast-image" style="height: 180px; width: 100%; object-fit: cover;">
+                    <h3 class="podcast-title">Navigating Government e-Services</h3>
+                    <div class="podcast-meta">
+                        <span><i class="fas fa-calendar"></i> June 5, 2025</span>
+                        <span><i class="fas fa-clock"></i> 23 min</span>
+                    </div>
+                    <p class="podcast-description">A comprehensive guide to using Kenya's government digital platforms - KRA, NTSA, eCitizen, and more. Tips and tricks to save time and avoid common pitfalls.</p>
+                    <audio controls class="podcast-player">
+                        <source src="src/B13-Episode-1 (copy 1).mp3" type="audio/mpeg">
+                       Your browser does not support the audio element.
+                    </audio>
+                    <div class="podcast-actions">
+                        <button class="podcast-action-btn">
+                            <i class="fas fa-heart"></i> 31
+                        </button>
+                        <button class="podcast-action-btn">
+                            <i class="fas fa-comment"></i> 12
+                        </button>
+                        <button class="podcast-action-btn">
+                            <i class="fas fa-share"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Podcast 3 -->
+                <!-- <div class="podcast-card">
+                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Tech Education" class="podcast-image">
+                    <h3 class="podcast-title">Tech Education Revolution in Kenya</h3>
+                    <div class="podcast-meta">
+                        <span><i class="fas fa-calendar"></i> May 28, 2025</span>
+                        <span><i class="fas fa-clock"></i> 48 min</span>
+                    </div>
+                    <p class="podcast-description">How digital literacy is transforming opportunities in Kenya. Interviews with students, educators, and tech entrepreneurs driving change.</p>
+                    <audio controls class="podcast-player">
+                        <source src="#" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <div class="podcast-actions">
+                        <button class="podcast-action-btn">
+                            <i class="fas fa-heart"></i> 42
+                        </button>
+                        <button class="podcast-action-btn">
+                            <i class="fas fa-comment"></i> 15
+                        </button>
+                        <button class="podcast-action-btn">
+                            <i class="fas fa-share"></i>
+                        </button>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- Community Chat Section
+            <div class="chat-section">
+                <div class="chat-header">
+                    <i class="fas fa-comments"></i>
+                    <h2>Community Chat</h2>
+                </div>
+                
+                <div class="chat-container">
+                    <div class="friends-list">
+                        <h3 style="margin-bottom: 1rem;">Friends</h3>
+                        
+                        <div class="friend-item active">
+                            <div class="friend-avatar">SK</div>
+                            <div>
+                                <div class="friend-name">Samuel Kiprotich</div>
+                                <div class="friend-status">
+                                    <span class="status-indicator"></span>
+                                    <span>Online</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="friend-item">
+                            <div class="friend-avatar">NM</div>
+                            <div>
+                                <div class="friend-name">Naomi Mwangi</div>
+                                <div class="friend-status">
+                                    <span class="status-indicator"></span>
+                                    <span>Online</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="friend-item">
+                            <div class="friend-avatar">JM</div>
+                            <div>
+                                <div class="friend-name">John Mwangi</div>
+                                <div class="friend-status">
+                                    <span class="status-indicator offline"></span>
+                                    <span>Offline</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="friend-item">
+                            <div class="friend-avatar">EC</div>
+                            <div>
+                                <div class="friend-name">Esther Chebet</div>
+                                <div class="friend-status">
+                                    <span class="status-indicator offline"></span>
+                                    <span>Offline</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="friend-item">
+                            <div class="friend-avatar">PK</div>
+                            <div>
+                                <div class="friend-name">Peter Kamau</div>
+                                <div class="friend-status">
+                                    <span class="status-indicator"></span>
+                                    <span>Online</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-messages">
+                        <div class="messages-container" id="chatMessages">
+                            <div class="message received">
+                                <div>Hey there! Did you listen to the latest podcast on government services?</div>
+                                <div class="message-time">10:24 AM</div>
+                                <div class="reaction-bar">
+                                    <button class="reaction-btn">👍</button>
+                                    <button class="reaction-btn">❤️</button>
+                                    <button class="reaction-btn">😄</button>
+                                </div>
+                            </div>
+                            
+                            <div class="message sent">
+                                <div>Yes, it was really helpful! I finally understood how to use the eCitizen portal properly.</div>
+                                <div class="message-time">10:26 AM</div>
+                            </div>
+                            
+                            <div class="message received">
+                                <div>I'm having trouble with my KRA PIN registration. Any advice?</div>
+                                <div class="message-time">10:28 AM</div>
+                            </div>
+                            
+                            <div class="message sent">
+                                <div>I can help! I just did mine last week. What specific issue are you facing?</div>
+                                <div class="message-time">10:29 AM</div>
+                            </div>
+                            
+                            <div class="message received">
+                                <div>It's asking for documents I don't have. Maybe we can meet at the cyber cafe tomorrow?</div>
+                                <div class="message-time">10:31 AM</div>
+                            </div>
+                            
+                            <div class="message sent">
+                                <div>Sure, I'll be there around 10 AM. I'll show you the alternative documents you can use.</div>
+                                <div class="message-time">10:32 AM</div>
+                            </div>
+                            
+                            <div class="message received">
+                                <div>That would be great! Thanks so much 🙏</div>
+                                <div class="message-time">10:33 AM</div>
+                                <div class="reaction-bar">
+                                    <button class="reaction-btn">👍<span class="reaction-count">1</span></button>
+                                    <button class="reaction-btn">❤️</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-input-container">
+                            <input type="text" class="chat-input" placeholder="Type your message...">
+                            <button class="send-btn">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    </section>
+
+    <script src="script.js"></script>
+    <script>
+        // Podcast Upload Form Handling
+        document.querySelector('.upload-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('podcast-title').value;
+            const description = document.getElementById('podcast-description').value;
+            
+            if(title && description) {
+                // Show success message
+                alert('Podcast uploaded successfully! It will be available after review.');
+                
+                // Reset form
+                this.reset();
+            } else {
+                alert('Please fill in all required fields');
+            }
+        });
+        
+        // Chat functionality
+        const chatInput = document.querySelector('.chat-input');
+        const sendBtn = document.querySelector('.send-btn');
+        const chatMessages = document.getElementById('chatMessages');
+        
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if(message) {
+                const now = new Date();
+                const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                
+                const messageElement = document.createElement('div');
+                messageElement.classList.add('message', 'sent');
+                messageElement.innerHTML = `
+                    <div>${message}</div>
+                    <div class="message-time">${timeString}</div>
+                `;
+                
+                chatMessages.appendChild(messageElement);
+                chatInput.value = '';
+                
+                // Scroll to bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                // Simulate reply after a delay
+                setTimeout(() => {
+                    const replyElement = document.createElement('div');
+                    replyElement.classList.add('message', 'received');
+                    replyElement.innerHTML = `
+                        <div>Thanks for your message! I'll get back to you soon.</div>
+                        <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                        <div class="reaction-bar">
+                            <button class="reaction-btn">👍</button>
+                            <button class="reaction-btn">❤️</button>
+                            <button class="reaction-btn">😄</button>
+                        </div>
+                    `;
+                    chatMessages.appendChild(replyElement);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 2000);
+            }
+        }
+        
+        sendBtn.addEventListener('click', sendMessage);
+        chatInput.addEventListener('keypress', function(e) {
+            if(e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        // Friend selection
+        document.querySelectorAll('.friend-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.friend-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                
+                // In a real app, this would load the conversation with the selected friend
+                chatMessages.innerHTML = `
+                    <div class="message received">
+                        <div>Hi there! How can I help you today?</div>
+                        <div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                        <div class="reaction-bar">
+                            <button class="reaction-btn">👍</button>
+                            <button class="reaction-btn">❤️</button>
+                            <button class="reaction-btn">😄</button>
+                        </div>
+                    </div>
+                `;
+            });
+        });
+        
+        // Reaction functionality
+        document.addEventListener('click', function(e) {
+            if(e.target.classList.contains('reaction-btn')) {
+                const reaction = e.target.textContent;
+                alert(`You reacted with ${reaction}`);
+            }
+        });
+    </script>
+</body>
+</html>
